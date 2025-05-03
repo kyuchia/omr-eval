@@ -1,67 +1,87 @@
-# import pandas as pd
-# import matplotlib.pyplot as plt
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# # Load the processed dataframe
-# csv_path = "/mnt/data/omr_category_summary.csv"
-# df = pd.read_csv(csv_path)
+# Load the CSV file
+csv_path = "/mnt/data/omr_category_summary.csv"
+df = pd.read_csv(csv_path)
 
-# # Define tools and categories
-# tools = ["newzik", "photoscore", "playscore2", "soundslice"]
-# categories = ['Notes', 'Rests', 'TimeSignatures', 'KeySignatures', 'Clefs', 'Spanners', 'Dynamics']
+# Define tools and categories
+tools = ["newzik", "photoscore", "playscore2", "soundslice"]
+categories = ['Notes', 'Rests', 'TimeSignatures', 'KeySignatures', 'Clefs', 'Spanners', 'Dynamics']
 
-# # Prepare summary data
-# summary_data = []
-# total_accuracy_summary = {}
+# Prepare summary data
+summary_data = []
+total_accuracy_summary = {}
 
-# for tool in tools:
-#     tool_total_right = 0
-#     tool_total_wrong = 0
-#     for category in categories:
-#         right_col = f"{tool}_{category}_right"
-#         wrong_col = f"{tool}_{category}_wrong"
-#         if right_col in df.columns and wrong_col in df.columns:
-#             right = df[right_col].fillna(0).sum()
-#             wrong = df[wrong_col].fillna(0).sum()
-#             total = right + wrong
-#             accuracy = right / total if total > 0 else 0
-#             summary_data.append({
-#                 "Tool": tool,
-#                 "Category": category,
-#                 "Right": right,
-#                 "Wrong": wrong,
-#                 "Total": total,
-#                 "Accuracy": accuracy
-#             })
-#             tool_total_right += right
-#             tool_total_wrong += wrong
-#     total = tool_total_right + tool_total_wrong
-#     total_accuracy_summary[tool] = {
-#         "Total Right": tool_total_right,
-#         "Total Wrong": tool_total_wrong,
-#         "Total Accuracy": tool_total_right / total if total > 0 else 0
-#     }
+for tool in tools:
+    tool_total_right = 0
+    tool_total_wrong = 0
+    for category in categories:
+        right_col = f"{tool}_{category}_right"
+        wrong_col = f"{tool}_{category}_wrong"
+        if right_col in df.columns and wrong_col in df.columns:
+            right = df[right_col].fillna(0).sum()
+            wrong = df[wrong_col].fillna(0).sum()
+            total = right + wrong
+            accuracy = right / total if total > 0 else 0
+            summary_data.append({
+                "Tool": tool,
+                "Category": category,
+                "Right": right,
+                "Wrong": wrong,
+                "Total": total,
+                "Accuracy": accuracy
+            })
+            tool_total_right += right
+            tool_total_wrong += wrong
+    total = tool_total_right + tool_total_wrong
+    total_accuracy_summary[tool] = {
+        "Total Right": tool_total_right,
+        "Total Wrong": tool_total_wrong,
+        "Total Accuracy": tool_total_right / total if total > 0 else 0
+    }
 
-# # Create summary DataFrame
-# category_accuracy_df = pd.DataFrame(summary_data)
+# Create summary DataFrame
+category_accuracy_df = pd.DataFrame(summary_data)
 
-# # Plot accuracy per category
-# plt.figure(figsize=(12, 6))
-# colors = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd']  # distinct colors
-# for i, tool in enumerate(tools):
-#     tool_data = category_accuracy_df[category_accuracy_df["Tool"] == tool]
-#     plt.plot(tool_data["Category"], tool_data["Accuracy"], label=tool, marker='o', color=colors[i])
-# plt.title("OMR Accuracy by Category and Tool")
-# plt.ylabel("Accuracy")
-# plt.xlabel("Category")
-# plt.ylim(0, 1.05)
-# plt.xticks(rotation=45)
-# plt.legend()
-# plt.grid(True)
-# plt.tight_layout()
-# plt.show()
+# Plot 1: Accuracy by Category and Tool
+plt.figure(figsize=(12, 6))
+colors = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd']  # distinct colors
+for i, tool in enumerate(tools):
+    tool_data = category_accuracy_df[category_accuracy_df["Tool"] == tool]
+    plt.plot(tool_data["Category"], tool_data["Accuracy"], label=tool, marker='o', color=colors[i])
+plt.title("OMR Accuracy by Category and Tool", fontsize=18)
+plt.ylabel("Accuracy", fontsize=14)
+plt.xlabel("Category", fontsize=14)
+plt.ylim(0, 1.05)
+plt.xticks(rotation=45, fontsize=12)
+plt.yticks(fontsize=12)
+plt.legend(fontsize=12)
+plt.grid(True)
+plt.tight_layout()
+plt.savefig("/mnt/data/accuracy_by_category_tool.png")
+plt.close()
 
-# # Create and show combined accuracy table
-# total_accuracy_df = pd.DataFrame.from_dict(total_accuracy_summary, orient='index')
-# combined_df = category_accuracy_df.pivot(index='Category', columns='Tool', values='Accuracy')
-# combined_df.loc['Total Accuracy'] = total_accuracy_df['Total Accuracy']
-# import ace_tools as tools; tools.display_dataframe_to_user(name="OMR Accuracy by Category and Tool", dataframe=combined_df.round(4))
+# Plot 2: Total Accuracy per Tool
+accuracy_df = pd.DataFrame.from_dict(
+    {tool: summary["Total Accuracy"] for tool, summary in total_accuracy_summary.items()},
+    orient='index', columns=['Total Accuracy']
+).sort_values(by='Total Accuracy', ascending=False)
+
+plt.figure(figsize=(8, 6))
+bars = plt.bar(accuracy_df.index, accuracy_df['Total Accuracy'], color=colors)
+plt.title("Total Accuracy per Tool", fontsize=16)
+plt.ylabel("Accuracy", fontsize=14)
+plt.ylim(0, 1)
+plt.grid(axis='y')
+plt.xticks(rotation=45, fontsize=13)
+plt.yticks(fontsize=12)
+plt.tight_layout()
+plt.savefig("/mnt/data/total_accuracy_per_tool.png")
+plt.close()
+
+# Export summary data if needed
+category_accuracy_df.to_csv("/mnt/data/category_accuracy_summary.csv", index=False)
+
+# Output paths
+["/mnt/data/accuracy_by_category_tool.png", "/mnt/data/total_accuracy_per_tool.png", "/mnt/data/category_accuracy_summary.csv"]
