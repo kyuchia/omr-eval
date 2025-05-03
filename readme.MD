@@ -1,8 +1,3 @@
-Certainly! Here's an updated and complete `README.md` for your project, incorporating the improved structure, usage, Mupix citation, and proper attribution:
-
----
-
-```markdown
 # OMR Evaluation Pipeline
 
 This repository contains a pipeline for evaluating Optical Music Recognition (OMR) outputs against ground-truth MusicXML files using [Mupix](https://github.com/deepio/mupix), a Python-based tool for symbolic music comparison.
