@@ -1,15 +1,21 @@
+###############-------generate_accuracy_report.py
+
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
-# Load the CSV file
-csv_path = "/mnt/data/omr_category_summary.csv"
+# Define input and output paths
+eval_folder = "./evaluation"
+os.makedirs(eval_folder, exist_ok=True)
+csv_path = os.path.join(eval_folder, "omr_category_summary.csv")
+
+# Load data
 df = pd.read_csv(csv_path)
 
-# Define tools and categories
 tools = ["newzik", "photoscore", "playscore2", "soundslice"]
 categories = ['Notes', 'Rests', 'TimeSignatures', 'KeySignatures', 'Clefs', 'Spanners', 'Dynamics']
+colors = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd']
 
-# Prepare summary data
 summary_data = []
 total_accuracy_summary = {}
 
@@ -41,12 +47,10 @@ for tool in tools:
         "Total Accuracy": tool_total_right / total if total > 0 else 0
     }
 
-# Create summary DataFrame
 category_accuracy_df = pd.DataFrame(summary_data)
 
 # Plot 1: Accuracy by Category and Tool
 plt.figure(figsize=(12, 6))
-colors = ['#1f77b4', '#d62728', '#2ca02c', '#9467bd']  # distinct colors
 for i, tool in enumerate(tools):
     tool_data = category_accuracy_df[category_accuracy_df["Tool"] == tool]
     plt.plot(tool_data["Category"], tool_data["Accuracy"], label=tool, marker='o', color=colors[i])
@@ -59,7 +63,7 @@ plt.yticks(fontsize=12)
 plt.legend(fontsize=12)
 plt.grid(True)
 plt.tight_layout()
-plt.savefig("/mnt/data/accuracy_by_category_tool.png")
+plt.savefig(os.path.join(eval_folder, "accuracy_by_category_tool.png"))
 plt.close()
 
 # Plot 2: Total Accuracy per Tool
@@ -77,11 +81,10 @@ plt.grid(axis='y')
 plt.xticks(rotation=45, fontsize=13)
 plt.yticks(fontsize=12)
 plt.tight_layout()
-plt.savefig("/mnt/data/total_accuracy_per_tool.png")
+plt.savefig(os.path.join(eval_folder, "total_accuracy_per_tool.png"))
 plt.close()
 
-# Export summary data if needed
-category_accuracy_df.to_csv("/mnt/data/category_accuracy_summary.csv", index=False)
+# Export CSV
+category_accuracy_df.to_csv(os.path.join(eval_folder, "category_accuracy_summary.csv"), index=False)
 
-# Output paths
-["/mnt/data/accuracy_by_category_tool.png", "/mnt/data/total_accuracy_per_tool.png", "/mnt/data/category_accuracy_summary.csv"]
+print("Plots and summary saved in ./evaluation/")
