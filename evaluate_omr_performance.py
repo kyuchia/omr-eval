@@ -1,4 +1,4 @@
-##############-------evaluate_omr_performance.py
+# ##############-------evaluate_omr_performance.py
 
 import json
 import os
@@ -11,8 +11,9 @@ results_folder = './mupix_results'
 tools = ["newzik", "photoscore", "playscore2", "soundslice"]
 excerpts = [f"excerpt{str(i).zfill(2)}" for i in range(1, 11)]
 
-# Initialize list for DataFrame rows
+# Collect data
 data = []
+all_categories = set()
 
 for excerpt in excerpts:
     row = {"Excerpt": excerpt}
@@ -21,42 +22,40 @@ for excerpt in excerpts:
         filepath = os.path.join(results_folder, filename)
 
         if not os.path.exists(filepath):
-            print(f" Missing file: {filename}")
+            print(f"Missing or skipped: {filename}")
             row[tool] = None
             continue
 
         with open(filepath, 'r') as f:
-            content = f.read().strip()
-            if not content:
-                print(f" Empty file: {filename}")
-                row[tool] = None
-                continue
             try:
-                data_json = json.loads(content)
+                data_json = json.load(f)
             except json.JSONDecodeError:
-                print(f" Invalid JSON in file: {filename}")
+                print(f"Invalid JSON: {filename}")
                 row[tool] = None
                 continue
 
-        # Sum up discrepancies
-        total_diff = 0
-        for category in data_json:
-            if isinstance(data_json[category], dict) and 'discrepancies' in data_json[category]:
-                total_diff += data_json[category]['discrepancies']
-        row[tool] = total_diff
+        tool_total_wrong = 0
+
+        for category, entries in data_json.items():
+            if isinstance(entries, list):
+                wrong = sum(entry.get('wrong', 0) for entry in entries)
+                right = sum(entry.get('right', 0) for entry in entries)
+                row[f"{tool}_{category}_wrong"] = wrong
+                row[f"{tool}_{category}_right"] = right
+                tool_total_wrong += wrong
+                all_categories.add(category)
+
+        row[tool] = tool_total_wrong
     data.append(row)
 
-# Convert to DataFrame
+# Create DataFrame
 df = pd.DataFrame(data)
 
-# Print summary
-print("\n=== Mupix Discrepancy Summary ===")
+# Print summary to terminal
+print("\n=== OMR Discrepancy Summary by Tool and Category ===")
 print(df.to_string(index=False))
 
 # Save to CSV
-df.to_csv("mupix_summary.csv", index=False)
-print("\n Results saved to mupix_summary.csv")
-
-
-
-
+csv_path = "omr_category_summary.csv"
+df.to_csv(csv_path, index=False)
+print(f"\nResults saved to {csv_path}")

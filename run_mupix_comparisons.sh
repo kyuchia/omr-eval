@@ -18,10 +18,25 @@ for tool in "${tools[@]}"; do
       continue
     fi
 
+    # These excerpts are known to crash Mupix due to MusicXML parsing issues,
+    # including errors related to <direction> (Dynamics), <repeat> (bar), or malformed spanners.
+    # Comment out these lines to allow Mupix to attempt parsing and evaluate robustness manually.
+
+    # if [[ "$tool" == "soundslice" && ( "$ex" == "07" || "$ex" == "08" || "$ex" == "09" ) ]]; then
+    #   echo "Skipping ${tool} excerpt${ex}.xml (known parse issue)"
+    #   continue
+    # fi
+
+    # if [[ "$tool" == "newzik" && "$ex" == "08" ]]; then
+    #   echo "Skipping ${tool} excerpt${ex}.xml (invalid repeat times on start repeat)"
+    #   continue
+    # fi
+
     # Run Mupix comparison
     echo "Running Mupix for ${tool} excerpt${ex}.xml..."
     mupix -pT compare ./ground_truth/excerpt${ex}.xml ./omr_outputs/${tool}/excerpt${ex}.xml > ./mupix_results/${tool}_excerpt${ex}.json
   done
 done
+
 
 
