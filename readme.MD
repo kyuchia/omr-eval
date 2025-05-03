@@ -42,7 +42,7 @@ This project provides a pipeline for evaluating Optical Music Recognition (OMR) 
 This project uses the open-source tool **Mupix** for symbolic MusicXML evaluation.
 
 * *Daigle, Alexandre. “Evaluation of Optical Music Recognition Software.” Master’s Thesis, McGill University, 2020.*
-  [Thesis](https://escholarship.mcgill.ca/concern/theses/mk61rn440)
-  [GitHub Repo](https://github.com/deepio/mupix)
+  [[Thesis]](https://escholarship.mcgill.ca/concern/theses/mk61rn440)
+  [[GitHub Repo]](https://github.com/deepio/mupix)
 
 
