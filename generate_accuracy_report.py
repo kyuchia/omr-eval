@@ -63,7 +63,7 @@ plt.yticks(fontsize=12)
 plt.legend(fontsize=12)
 plt.grid(True)
 plt.tight_layout()
-plt.savefig(os.path.join(eval_folder, "accuracy_by_category_tool.png"))
+plt.savefig(os.path.join(eval_folder, "accuracy_by_category_tool.png"), dpi=1000)
 plt.close()
 
 # Plot 2: Total Accuracy per Tool
@@ -81,7 +81,7 @@ plt.grid(axis='y')
 plt.xticks(rotation=45, fontsize=13)
 plt.yticks(fontsize=12)
 plt.tight_layout()
-plt.savefig(os.path.join(eval_folder, "total_accuracy_per_tool.png"))
+plt.savefig(os.path.join(eval_folder, "total_accuracy_per_tool.png"), dpi=1000)
 plt.close()
 
 # Export CSV
