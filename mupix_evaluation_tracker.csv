@@ -1,0 +1,5 @@
+Tool,Excerpt,Ground Truth Path,OMR Output Path,Mupix Result Path,Command
+soundslice,excerpt01,./ground_truth/excerpt01.xml,./omr_outputs/soundslice/excerpt01.xml,./mupix_results/soundslice_excerpt01.json,mupix -pT compare ./ground_truth/excerpt01.xml ./omr_outputs/soundslice/excerpt01.xml > ./mupix_results/soundslice_excerpt01.json
+newzik,excerpt01,./ground_truth/excerpt01.xml,./omr_outputs/newzik/excerpt01.xml,./mupix_results/newzik_excerpt01.json,mupix -pT compare ./ground_truth/excerpt01.xml ./omr_outputs/newzik/excerpt01.xml > ./mupix_results/newzik_excerpt01.json
+photoscore,excerpt01,./ground_truth/excerpt01.xml,./omr_outputs/photoscore/excerpt01.xml,./mupix_results/photoscore_excerpt01.json,mupix -pT compare ./ground_truth/excerpt01.xml ./omr_outputs/photoscore/excerpt01.xml > ./mupix_results/photoscore_excerpt01.json
+playscore2,excerpt01,./ground_truth/excerpt01.xml,./omr_outputs/playscore2/excerpt01.xml,./mupix_results/playscore2_excerpt01.json,mupix -pT compare ./ground_truth/excerpt01.xml ./omr_outputs/playscore2/excerpt01.xml > ./mupix_results/playscore2_excerpt01.json

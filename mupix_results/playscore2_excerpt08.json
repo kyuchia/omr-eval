@@ -1,0 +1,51 @@
+{
+  "Notes": [
+    {
+      "right": 378,
+      "wrong": 43,
+      "name": "NoteTotalResult"
+    }
+  ],
+  "Rests": [
+    {
+      "right": 53,
+      "wrong": 6,
+      "name": "RestTotalResult"
+    }
+  ],
+  "TimeSignatures": [
+    {
+      "right": 0,
+      "wrong": 8,
+      "name": "TimeSignatureTotalResult"
+    }
+  ],
+  "KeySignatures": [
+    {
+      "right": 12,
+      "wrong": 0,
+      "name": "KeySignatureTotalResult"
+    }
+  ],
+  "Clefs": [
+    {
+      "right": 24,
+      "wrong": 0,
+      "name": "ClefTotalResult"
+    }
+  ],
+  "Spanners": [
+    {
+      "right": 6804,
+      "wrong": 5616,
+      "name": "SpannerTotalResult"
+    }
+  ],
+  "Dynamics": [
+    {
+      "right": 0,
+      "wrong": 0,
+      "name": "DynamicTotalResult"
+    }
+  ]
+}
