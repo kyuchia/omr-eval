@@ -20,7 +20,7 @@ This project provides a pipeline for evaluating Optical Music Recognition (OMR) 
 
    ```bash
    bash run_mupix_comparisons.sh
-````
+    ````
 
 2. Analyze and visualize results:
 
